@@ -11,6 +11,6 @@ class Setting:
 settings = Setting()
 
 class SettingHost:
-    FRONTEND_URL = "http://localhost:3000"
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL")
 
 settingsHost = SettingHost()
