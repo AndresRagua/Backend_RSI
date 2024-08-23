@@ -1,7 +1,4 @@
-# programa.py
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import joinedload
-from sqlalchemy.exc import IntegrityError 
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.db.models import Programa as ProgramaModel
@@ -15,21 +12,18 @@ router = APIRouter(
 
 @router.post('/', response_model=Programa)
 def crear_programa(programa: ProgramaCreate, db: Session = Depends(get_db)):
-    if programa.fk_radio is None:
-        raise HTTPException(status_code=400, detail="fk_radio es necesario")
-    nueva_programacion = ProgramaModel(**programa.dict())
-    db.add(nueva_programacion)
-    try:
-        db.commit()
-    except IntegrityError as e:
-        db.rollback()
-        raise HTTPException(status_code=400, detail="Error en la integridad de los datos: " + str(e))
-    db.refresh(nueva_programacion)
-    return nueva_programacion
+    nuevo_programa = ProgramaModel(**programa.dict())
+    db.add(nuevo_programa)
+    db.commit()
+    db.refresh(nuevo_programa)
+    return nuevo_programa
 
 @router.get('/', response_model=List[Programa])
-def obtener_programas(db: Session = Depends(get_db)):
-    programas = db.query(ProgramaModel).options(joinedload(ProgramaModel.programaciones)).all()
+def obtener_programas(radio_id: int = Query(None), db: Session = Depends(get_db)):
+    if radio_id is not None:
+        programas = db.query(ProgramaModel).filter(ProgramaModel.fk_radio == radio_id).all()
+    else:
+        programas = db.query(ProgramaModel).all()
     return programas
 
 @router.get('/{programa_id}', response_model=Programa)
