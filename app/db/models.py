@@ -20,11 +20,14 @@ class Radio(Base):
     url_primer_fondo = Column(String(500), nullable=False)
     url_segundo_fondo = Column(String(500), nullable=True)
     url_tercer_fondo = Column(String(500), nullable=True)
+    
     programas = relationship('Programa', back_populates='radio')
     artistas = relationship('ArtistaInvitado', back_populates='radio')
     publicidades = relationship('Publicidad', back_populates='radio')
     servicios_sociales = relationship('ServicioSocial', back_populates='radio')
     usuarios = relationship('Usuario', back_populates='radio')
+    televisiones = relationship('Television', back_populates='radio')
+
 
 class Programa(Base):
     __tablename__ = 'programa'
@@ -108,3 +111,17 @@ class HiloMusical(Base):
     url_image = Column(String(500), nullable=False)
     fk_usuario = Column(Integer, ForeignKey('usuarios.id_usuario'))
     usuario = relationship('Usuario', back_populates='hilos_musicales')
+
+class Television(Base):
+    __tablename__ = 'television'
+    id_television = Column(Integer, primary_key=True)
+    url_stream = Column(String(500), nullable=False)
+    segundo_url_stream = Column(String(500), nullable=True)
+    url_image_fondo = Column(String(500), nullable=False)
+    segundo_url_image_fondo = Column(String(500), nullable=True)
+    url_twitter = Column(String(500), nullable=False)
+    url_instagram = Column(String(500), nullable=False)
+    url_facebook = Column(String(500), nullable=False)
+    fk_radio = Column(Integer, ForeignKey('radio.id'), nullable=False)
+    
+    radio = relationship('Radio', back_populates='televisiones')

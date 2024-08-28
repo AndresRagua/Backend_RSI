@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 from datetime import date
 
@@ -229,6 +229,30 @@ class ServicioSocial(BaseModel):
     nombre_audios: str
     fk_radio: int
     audios_servicio: List[AudioServicio] = []
+
+    class Config:
+        from_attributes = True
+
+class TelevisionCreate(BaseModel):
+    url_stream: str
+    segundo_url_stream: Optional[str] = None
+    url_image_fondo: str
+    segundo_url_image_fondo: Optional[str] = None
+    url_twitter: str
+    url_instagram: str
+    url_facebook: str
+    fk_radio: int
+
+class Television(BaseModel):
+    id_television: int
+    url_stream: str
+    segundo_url_stream: Optional[str]
+    url_image_fondo: str
+    segundo_url_image_fondo: Optional[str]
+    url_twitter: str
+    url_instagram: str
+    url_facebook: str
+    fk_radio: int
 
     class Config:
         from_attributes = True

@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import admin, home, radio, programa, programacion, artista, publicidad, servicio, audio_servicio,usuario, hilo
+from app.routers import admin, home, radio, programa, programacion, artista, publicidad, servicio, audio_servicio,usuario, hilo, television
 from app.db.database import Base, engine
 from core.config import settingsHost
 
@@ -33,6 +33,7 @@ app.include_router(usuario.router)
 app.include_router(hilo.router)
 app.include_router(home.router)
 app.include_router(audio_servicio.router)
+app.include_router(television.router)
 
 
 
